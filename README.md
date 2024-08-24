@@ -144,13 +144,8 @@ npm start -- --dir ./data --dbfilename dump.rdb
 ## Project Structure
 
 - **src/**: Contains all the TypeScript source code.
-  - **commands/**: Handlers for various Redis commands.
-  - **replication/**: Code related to replication.
-  - **persistence/**: Code related to loading and saving data.
-  - **server.ts**: The main server file.
-  - **config.ts**: Configuration and setup.
 
-- **build/**: Contains the compiled JavaScript files.
+- **dist/**: Contains the compiled JavaScript files.
 
 - **test/**: Tests for the various functionalities.
 
