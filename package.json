@@ -1,0 +1,17 @@
+{
+  "name": "redis-project-ts",
+  "version": "1.0.0",
+  "description": "Redis on typescript",
+  "main": "dist/main.ts",
+  "scripts": {
+    "start": "ts-node src/main.ts --port 6379",
+    "start:replica": "ts-node src/main.ts --port 6380 --replicaof 127.0.0.1 6379",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vivek Shah",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "ts-node": "^10.9.2"
+  }
+}
