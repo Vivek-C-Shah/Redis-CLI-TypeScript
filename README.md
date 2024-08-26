@@ -19,18 +19,38 @@ This project is a simplified Redis-like server built using TypeScript. It implem
 - **XADD**: Add entries to a stream.
 - **XRANGE**: Retrieve entries from a stream within a specified range.
 
-### 4. Replication
+### 4. List Operations
+- **LPUSH**: Add an element to the head of a list.
+- **RPUSH**: Add an element to the tail of a list.
+- **LPOP**: Remove and return the first element of a list.
+- **RPOP**: Remove and return the last element of a list.
+- **LLEN**: Get the length of a list.
+- **LRANGE**: Get a range of elements from a list.
+- **LTRIM**: Trim a list to a specified range.
+- **LMOVE**: Atomically move elements from one list to another.
+- **LINDEX**: Get an element at a specific index in a list.
+- **LSET**: Set the value of an element in a list at a specific index.
+- **LREM**: Remove elements from a list.
+- **LINSERT**: Insert an element before or after another element in a list.
+- **LGETALL**: Retrieve all elements in a list.
+
+### 5. Pub/Sub (Publish/Subscribe)
+- **SUBSCRIBE**: Subscribe to a channel to receive messages.
+- **UNSUBSCRIBE**: Unsubscribe from a channel.
+- **PUBLISH**: Publish a message to a channel.
+
+### 6. Replication
 - **REPLCONF/PSYNC**: Support for master-slave replication.
 
-### 5. Persistence
+### 7. Persistence
 - **RDB Loading**: Load key-value pairs from an RDB file on server startup.
 
-### 6. Basic Commands
+### 8. Basic Commands
 - **PING**: Test server responsiveness.
 - **ECHO**: Echo back the provided message.
 - **INFO**: Retrieve server information.
 
-### 7. Advanced Commands
+### 9. Advanced Commands
 - **WAIT**: Block until write commands are acknowledged by replicas.
 
 ## Installation
@@ -123,6 +143,96 @@ This project is a simplified Redis-like server built using TypeScript. It implem
 
   ```bash
   XRANGE mystream 0-0 +
+  ```
+
+### List Operations
+
+- **Add Elements to a List:**
+
+  ```bash
+  LPUSH mylist "first"
+  RPUSH mylist "second"
+  ```
+
+- **Remove Elements from a List:**
+
+  ```bash
+  LPOP mylist
+  RPOP mylist
+  ```
+
+- **Get the Length of a List:**
+
+  ```bash
+  LLEN mylist
+  ```
+
+- **Get a Range of Elements from a List:**
+
+  ```bash
+  LRANGE mylist 0 -1
+  ```
+
+- **Trim a List to a Specified Range:**
+
+  ```bash
+  LTRIM mylist 0 1
+  ```
+
+- **Move Elements Between Lists:**
+
+  ```bash
+  LMOVE list1 list2 LEFT RIGHT
+  ```
+
+- **Get an Element by Index:**
+
+  ```bash
+  LINDEX mylist 0
+  ```
+
+- **Set the Value of an Element at a Specific Index:**
+
+  ```bash
+  LSET mylist 0 "new_value"
+  ```
+
+- **Remove Elements from a List:**
+
+  ```bash
+  LREM mylist 1 "value_to_remove"
+  ```
+
+- **Insert an Element Before or After Another Element:**
+
+  ```bash
+  LINSERT mylist BEFORE "pivot_value" "new_value"
+  ```
+
+- **Retrieve All Elements in a List:**
+
+  ```bash
+  LGETALL mylist
+  ```
+
+### Pub/Sub Operations
+
+- **Subscribe to a Channel:**
+
+  ```bash
+  SUBSCRIBE mychannel
+  ```
+
+- **Unsubscribe from a Channel:**
+
+  ```bash
+  UNSUBSCRIBE mychannel
+  ```
+
+- **Publish a Message to a Channel:**
+
+  ```bash
+  PUBLISH mychannel "Hello, Subscribers!"
   ```
 
 ### Replication

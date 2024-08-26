@@ -9,6 +9,8 @@ import { readRDBFile } from "./rdbFile";
 import { streamArray, streamKey, xAdd, xRange } from "./stream";
 import { config } from "./config";
 import { exec } from "node:child_process";
+import { handleSubscribe, handleUnsubscribe, handlePublish } from "./handlePubSub";
+import * as listOperations from "./listOperations";
 
 const dictionary: Dictionary = {};
 const replicaDict: ReplicaDict = {};
@@ -25,7 +27,7 @@ export async function handleCommand(
 		.filter((_, i) => i % 2 === 1)
 		.map((cmd) => cmd.toLowerCase());
 
-	console.log("Commands", sudoCommands);
+	console.log("Commands in handle command", sudoCommands);
 
 	if (commands.includes("discard")) {
 		return handleDiscard();
@@ -82,6 +84,89 @@ export async function handleCommand(
 	}
 	if (commands.includes("psync")) {
 		return handlePSync(connection);
+	}
+	if (commands.includes("subscribe")) {
+		return handleSubscribe(commands, connection);
+	}
+	if (commands.includes("unsubscribe")) {
+		return handleUnsubscribe(commands);
+	}
+	if (commands.includes("publish")) {
+		return handlePublish(commands);
+	}
+	if (commands.includes("lpush")) {
+		const key = commands[commands.indexOf("lpush") + 1];
+		const value = commands.slice(commands.indexOf("lpush") + 2);
+		return `:${listOperations.lpush(key, value)}\r\n`;
+	}
+	if (commands.includes("rpush")) {
+		const key = commands[commands.indexOf("rpush") + 1];
+		const values = commands.slice(commands.indexOf("rpush") + 2);
+		return `:${listOperations.rpush(key, values)}\r\n`;
+	}
+	if (commands.includes("lpop")) {
+		const key = commands[commands.indexOf("lpop") + 1];
+		const value = listOperations.lpop(key);
+		return value ? `$${value.length}\r\n${value}\r\n` : "$-1\r\n";
+	}
+	if (commands.includes("rpop")) {
+		const key = commands[commands.indexOf("rpop") + 1];
+		const value = listOperations.rpop(key);
+		return value ? `$${value.length}\r\n${value}\r\n` : "$-1\r\n";
+	}
+	if (commands.includes("llen")) {
+		const key = commands[commands.indexOf("llen") + 1];
+		return `:${listOperations.llen(key)}\r\n`;
+	}
+	if (commands.includes("lrange")) {
+		const key = commands[commands.indexOf("lrange") + 1];
+		const start = Number.parseInt(commands[commands.indexOf("lrange") + 2]);
+		const stop = Number.parseInt(commands[commands.indexOf("lrange") + 3]);
+		const range = listOperations.lrange(key, start, stop);
+		return getBulkArray(range);
+	}
+	if (commands.includes("ltrim")) {
+		const key = commands[commands.indexOf("ltrim") + 1];
+		const start = Number.parseInt(commands[commands.indexOf("ltrim") + 2]);
+		const stop = Number.parseInt(commands[commands.indexOf("ltrim") + 3]);
+		return listOperations.ltrim(key, start, stop);
+	}
+	if (commands.includes("lmove")) {
+		const source = commands[commands.indexOf("lmove") + 1];
+		const destination = commands[commands.indexOf("lmove") + 2];
+		const whereFrom = commands[commands.indexOf("lmove") + 3];
+		const whereTo = commands[commands.indexOf("lmove") + 4];
+		const value = listOperations.lmove(source, destination, whereFrom, whereTo);
+		return value ? `$${value.length}\r\n${value}\r\n` : "$-1\r\n";
+	}
+	if (commands.includes("lindex")) {
+		const key = commands[commands.indexOf("lindex") + 1];
+		const index = Number.parseInt(commands[commands.indexOf("lindex") + 2]);
+		const value = listOperations.lindex(key, index);
+		return value ? `$${value.length}\r\n${value}\r\n` : "$-1\r\n";
+	}
+	if (commands.includes("lset")) {
+		const key = commands[commands.indexOf("lset") + 1];
+		const index = Number.parseInt(commands[commands.indexOf("lset") + 2]);
+		const value = commands[commands.indexOf("lset") + 3];
+		return `:${listOperations.lset(key, index, value)}\r\n`;
+	}
+	if (commands.includes("lrem")) {
+		const key = commands[commands.indexOf("lrem") + 1];
+		const count = Number.parseInt(commands[commands.indexOf("lrem") + 2]);
+		const value = commands[commands.indexOf("lrem") + 3];
+		return `:${listOperations.lrem(key, count, value)}\r\n`;
+	}
+	if (commands.includes("linsert")) {
+		const key = commands[commands.indexOf("linsert") + 1];
+		const where = commands[commands.indexOf("linsert") + 2];
+		const pivot = commands[commands.indexOf("linsert") + 3];
+		const value = commands[commands.indexOf("linsert") + 4];
+		return `:${listOperations.linsert(key, where, pivot, value)}\r\n`;
+	}
+	if (commands.includes("lgetall")) {
+		const key = commands[commands.indexOf("lgetall") + 1];
+		return getBulkArray(listOperations.lgetall(key));
 	}
 
 	return null;
@@ -380,7 +465,6 @@ async function xreadStreams(
 		}, delay);
 	});
 }
-
 
 async function propagateToReplicas(command: string): Promise<void> {
 	// Assuming replicas is an array of replica connections

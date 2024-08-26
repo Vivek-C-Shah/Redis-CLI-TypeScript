@@ -29,7 +29,6 @@ export class Stream {
 	}
 }
 
-
 export interface TimeToVersion {
 	[timestamp: string]: string[];
 }
@@ -66,8 +65,18 @@ export interface StreamKey {
 	[key: string]: Stream[];
 }
 
-import type * as net from 'node:net';
+import type * as net from "node:net";
 
 export interface Connection extends net.Socket {
 	type?: "client" | "replica";
 }
+
+export type Subscriber = (message: string) => void;
+
+export interface PubSubChannels {
+	[channel: string]: Subscriber[];
+}
+
+export interface RedisLists {
+		[key: string]: string[];
+	}

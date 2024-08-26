@@ -4,7 +4,7 @@
   "description": "Redis on typescript",
   "main": "dist/main.ts",
   "scripts": {
-    "start": "ts-node src/main.ts --port 6379",
+    "start": "ts-node src/main.ts --port 6380",
     "start:replica": "ts-node src/main.ts --port 6380 --replicaof 127.0.0.1 6379",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
