@@ -169,7 +169,7 @@ export async function handleCommand(
 		return getBulkArray(listOperations.lgetall(key));
 	}
 
-	return null;
+	return "-ERR unknown command\r\n";
 }
 
 function handleDiscard(): string {

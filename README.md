@@ -77,7 +77,7 @@ This project is a simplified Redis-like server built using TypeScript. It implem
 3. **Run the Server:**
 
    ```bash
-   npm start -- --port 6379
+   npm start
    ```
 
    You can specify a different port if needed.
@@ -85,7 +85,7 @@ This project is a simplified Redis-like server built using TypeScript. It implem
 4. **Connect using Redis CLI:**
 
    ```bash
-   redis-cli -p 6379
+   redis-cli -p 6380
    ```
 
 ## Usage
