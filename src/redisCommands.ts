@@ -11,6 +11,7 @@ import { config } from "./config";
 import { exec } from "node:child_process";
 import { handleSubscribe, handleUnsubscribe, handlePublish } from "./handlePubSub";
 import * as listOperations from "./listOperations";
+import { handleGeoCommands } from "./handleGeoCommands";
 
 const dictionary: Dictionary = {};
 const replicaDict: ReplicaDict = {};
@@ -167,6 +168,12 @@ export async function handleCommand(
 	if (commands.includes("lgetall")) {
 		const key = commands[commands.indexOf("lgetall") + 1];
 		return getBulkArray(listOperations.lgetall(key));
+	}
+
+	// Geo commands
+
+	if (commands.some((cmd) => cmd.includes("geo"))) {
+		return handleGeoCommands(commands, connection);
 	}
 
 	return "-ERR unknown command\r\n";

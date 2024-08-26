@@ -78,5 +78,14 @@ export interface PubSubChannels {
 }
 
 export interface RedisLists {
-		[key: string]: string[];
-	}
+	[key: string]: string[];
+}
+
+export type GeoMember = {
+	longitude: number;
+	latitude: number;
+};
+
+export type GeoIndex = {
+	[key: string]: Map<string, GeoMember>;
+};
