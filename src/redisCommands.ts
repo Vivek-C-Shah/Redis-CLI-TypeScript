@@ -85,13 +85,13 @@ export async function handleCommand(
 	if (commands.includes("psync")) {
 		return handlePSync(connection);
 	}
-	if (commands.includes("subscribe")) {
+	if (commands.includes("subscribe") || commands.includes("sub")) {
 		return handleSubscribe(commands, connection);
 	}
-	if (commands.includes("unsubscribe")) {
+	if (commands.includes("unsubscribe") || commands.includes("unsub")) {
 		return handleUnsubscribe(commands);
 	}
-	if (commands.includes("publish")) {
+	if (commands.includes("publish") || commands.includes("pub")) {
 		return handlePublish(commands);
 	}
 	if (commands.includes("lpush")) {

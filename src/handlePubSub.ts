@@ -34,7 +34,7 @@ export function handleSubscribe(
 	commands: string[],
 	connection: Connection,
 ): string {
-	const channel = commands[1];
+	const channel = commands[(commands.indexOf("subscribe") || commands.indexOf("sub")) + 1];
 	const subscriber = (message: string) => {
 		connection.write(message); // Sends the message directly to the connected client
 	};
@@ -45,7 +45,7 @@ export function handleSubscribe(
 }
 
 export function handleUnsubscribe(commands: string[]): string {
-	const channel = commands[commands.indexOf("unsubscribe") + 1];
+	const channel = commands[(commands.indexOf("unsubscribe") || commands.indexOf("pub")) + 1];
 	unsubscribe(channel, (message: string) =>
 		console.log(`Received message on ${channel}: ${message}`),
 	);
@@ -55,7 +55,7 @@ export function handleUnsubscribe(commands: string[]): string {
 }
 
 export function handlePublish(commands: string[]): string {
-	const pubIndex = commands.indexOf("publish");
+	const pubIndex = (commands.indexOf("publish") || commands.indexOf("pub"));
 	const channel = commands[pubIndex + 1];
 	const message = commands.slice(pubIndex + 2).join(" ");
 	console.log("Channel", channel, "Message", message);
