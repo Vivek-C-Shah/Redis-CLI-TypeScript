@@ -12,6 +12,8 @@ import { exec } from "node:child_process";
 import { handleSubscribe, handleUnsubscribe, handlePublish } from "./handlePubSub";
 import * as listOperations from "./listOperations";
 import { handleGeoCommands } from "./handleGeoCommands";
+import { sadd, srem, sismember, sinter, scard } from "./setOperations";
+import { zadd, zrem, zscore, zrank, zrange } from "./sortedSetOperations";
 
 const dictionary: Dictionary = {};
 const replicaDict: ReplicaDict = {};
@@ -169,6 +171,70 @@ export async function handleCommand(
 		const key = commands[commands.indexOf("lgetall") + 1];
 		return getBulkArray(listOperations.lgetall(key));
 	}
+
+	// set operations
+
+	if (commands.includes("sadd")) {
+        const key = commands[commands.indexOf("sadd") + 1];
+        const members = commands.slice(commands.indexOf("sadd") + 2);
+        return `:${sadd(key, members)}\r\n`;
+    }
+    if (commands.includes("srem")) {
+        const key = commands[commands.indexOf("srem") + 1];
+        const members = commands.slice(commands.indexOf("srem") + 2);
+        return `:${srem(key, members)}\r\n`;
+    }
+    if (commands.includes("sismember")) {
+        const key = commands[commands.indexOf("sismember") + 1];
+        const member = commands[commands.indexOf("sismember") + 2];
+        return `:${sismember(key, member)}\r\n`;
+    }
+    if (commands.includes("sinter")) {
+        const keys = commands.slice(commands.indexOf("sinter") + 1);
+        const result = sinter(keys);
+        return getBulkArray(result);
+    }
+    if (commands.includes("scard")) {
+        const key = commands[commands.indexOf("scard") + 1];
+        return `:${scard(key)}\r\n`;
+    }
+
+	// sorted set operations
+
+	if (commands.includes("zadd")) {
+        const key = commands[commands.indexOf("zadd") + 1];
+        const scoreMembers: Array<[number, string]> = [];
+        for (let i = commands.indexOf("zadd") + 2; i < commands.length; i += 2) {
+            const score = Number.parseFloat(commands[i]);
+            const member = commands[i + 1];
+            scoreMembers.push([score, member]);
+        }
+        return `:${zadd(key, scoreMembers)}\r\n`;
+    }
+    if (commands.includes("zrem")) {
+        const key = commands[commands.indexOf("zrem") + 1];
+        const members = commands.slice(commands.indexOf("zrem") + 2);
+        return `:${zrem(key, members)}\r\n`;
+    }
+    if (commands.includes("zscore")) {
+        const key = commands[commands.indexOf("zscore") + 1];
+        const member = commands[commands.indexOf("zscore") + 2];
+        const score = zscore(key, member);
+        return score !== null ? `:${score}\r\n` : "$-1\r\n";
+    }
+    if (commands.includes("zrank")) {
+        const key = commands[commands.indexOf("zrank") + 1];
+        const member = commands[commands.indexOf("zrank") + 2];
+        const rank = zrank(key, member);
+        return rank !== null ? `:${rank}\r\n` : "$-1\r\n";
+    }
+    if (commands.includes("zrange")) {
+        const key = commands[commands.indexOf("zrange") + 1];
+        const start = Number.parseInt(commands[commands.indexOf("zrange") + 2], 10);
+        const stop = Number.parseInt(commands[commands.indexOf("zrange") + 3], 10);
+        const result = zrange(key, start, stop);
+        return getBulkArray(result);
+    }
 
 	// Geo commands
 

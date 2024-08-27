@@ -34,23 +34,37 @@ This project is a simplified Redis-like server built using TypeScript. It implem
 - **LINSERT**: Insert an element before or after another element in a list.
 - **LGETALL**: Retrieve all elements in a list.
 
-### 5. Pub/Sub (Publish/Subscribe)
+### 5. Set Operations
+- **SADD**: Add one or more members to a set.
+- **SREM**: Remove one or more members from a set.
+- **SISMEMBER**: Check if a member exists in a set.
+- **SINTER**: Return the intersection of multiple sets.
+- **SCARD**: Return the cardinality (size) of a set.
+
+### 6. Sorted Set Operations
+- **ZADD**: Add one or more members to a sorted set, or update the score for members that already exist.
+- **ZREM**: Remove one or more members from a sorted set.
+- **ZSCORE**: Get the score associated with the given member in a sorted set.
+- **ZRANK**: Determine the index of a member in a sorted set, with scores ordered from low to high.
+- **ZRANGE**: Return a range of members in a sorted set, by index.
+
+### 7. Pub/Sub (Publish/Subscribe)
 - **SUBSCRIBE**: Subscribe to a channel to receive messages.
 - **UNSUBSCRIBE**: Unsubscribe from a channel.
 - **PUBLISH**: Publish a message to a channel.
 
-### 6. Replication
+### 8. Replication
 - **REPLCONF/PSYNC**: Support for master-slave replication.
 
-### 7. Persistence
+### 9. Persistence
 - **RDB Loading**: Load key-value pairs from an RDB file on server startup.
 
-### 8. Basic Commands
+### 10. Basic Commands
 - **PING**: Test server responsiveness.
 - **ECHO**: Echo back the provided message.
 - **INFO**: Retrieve server information.
 
-### 9. Advanced Commands
+### 11. Advanced Commands
 - **WAIT**: Block until write commands are acknowledged by replicas.
 
 ## Installation
@@ -213,6 +227,70 @@ This project is a simplified Redis-like server built using TypeScript. It implem
 
   ```bash
   LGETALL mylist
+  ```
+
+### Set Operations
+
+- **Add Elements to a Set:**
+
+  ```bash
+  SADD myset "member1" "member2"
+  ```
+
+- **Remove Elements from a Set:**
+
+  ```bash
+  SREM myset "member1"
+  ```
+
+- **Check for Membership in a Set:**
+
+  ```bash
+  SISMEMBER myset "member2"
+  ```
+
+- **Get the Intersection of Multiple Sets:**
+
+  ```bash
+  SINTER myset1 myset2
+  ```
+
+- **Get the Cardinality of a Set:**
+
+  ```bash
+  SCARD myset
+  ```
+
+### Sorted Set Operations
+
+- **Add Elements to a Sorted Set:**
+
+  ```bash
+  ZADD myzset 1 "member1" 2 "member2"
+  ```
+
+- **Remove Elements from a Sorted Set:**
+
+  ```bash
+  ZREM myzset "member1"
+  ```
+
+- **Get the Score of an Element in a Sorted Set:**
+
+  ```bash
+  ZSCORE myzset "member2"
+  ```
+
+- **Get the Rank of an Element in a Sorted Set:**
+
+  ```bash
+  ZRANK myzset "member2"
+  ```
+
+- **Get a Range of Elements from a Sorted Set:**
+
+  ```bash
+  ZRANGE myzset 0 -1
   ```
 
 ### Pub/Sub Operations

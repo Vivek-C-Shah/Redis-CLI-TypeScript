@@ -89,3 +89,7 @@ export type GeoMember = {
 export type GeoIndex = {
 	[key: string]: Map<string, GeoMember>;
 };
+
+export type RedisSets = { [key: string]: Set<string> };
+
+export type RedisSortedSets = { [key: string]: Map<string, number> };
