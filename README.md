@@ -1,5 +1,5 @@
 # Redis-like Server in TypeScript
-
+- **Checkout the full blog**: [Blog](https://medium.com/@vivekchiragshah2004/building-a-redis-like-server-with-typescript-a-journey-of-learning-and-implementation-457fb289c288)
 ## Overview
 
 This project is a simplified Redis-like server built using TypeScript. It implements core features of Redis, such as key-value storage, transactions, streams, replication, and more. The server is designed to handle commands using the RESP (REdis Serialization Protocol) and provides a robust foundation for understanding the internals of a Redis-like in-memory database.
